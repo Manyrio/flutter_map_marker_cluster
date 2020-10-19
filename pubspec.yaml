@@ -15,9 +15,11 @@ dependencies:
 
   flutter_map:
     git:
-        url: https://github.com/Manyrio/flutter_map
+      url: https://github.com/Manyrio/flutter_map
   latlong: ^0.6.1
-  flutter_map_marker_popup: ^0.1.4
+  flutter_map_marker_popup:
+    git:
+      url: https://github.com/Manyrio/flutter_map_marker_cluster
 
 dev_dependencies:
   flutter_test:
