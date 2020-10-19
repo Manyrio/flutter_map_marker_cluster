@@ -169,6 +169,16 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       }
     }
   }
+  
+    Animation<double> _fadeAnimation(
+      AnimationController controller, FadeType fade) {
+    if (fade == FadeType.FadeIn)
+      return Tween<double>(begin: 0.0, end: 1.0).animate(controller);
+    if (fade == FadeType.FadeOut)
+      return Tween<double>(begin: 1.0, end: 0.0).animate(controller);
+
+    return null;
+  }
 
   Animation<Point> _translateAnimation(AnimationController controller,
       TranslateType translate, Point pos, Point newPos) {
@@ -195,7 +205,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         (translate != TranslateType.None && newPos != null));
 
     final pos = myPos ?? _getPixelFromMarker(marker);
-
+  
+    Animation<double> fadeAnimation = _fadeAnimation(controller, fade);
+    
     Animation<Point> translateAnimation =
         _translateAnimation(controller, translate, pos, newPos);
 
@@ -216,7 +228,10 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
           top: translate == TranslateType.None
               ? pos.y
               : translateAnimation.value.y,
-          child: child,
+          child: Opacity(
+            opacity: fade == FadeType.None ? 1 : fadeAnimation.value,
+            child: child,
+          ),
         );
       },
     );
@@ -227,7 +242,10 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
     final points = _generatePointSpiderfy(
         cluster.markers.length, _getPixelFromPoint(cluster.point));
-
+    
+    final fadeAnimation =
+        Tween<double>(begin: 1.0, end: 0.3).animate(_spiderfyController);
+    
     List<Widget> results = [];
 
     Size size = getClusterSize(cluster);
@@ -249,7 +267,10 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
             height: size.height,
             left: pos.x,
             top: pos.y,
-            child: child,
+            child: Opacity(
+              opacity: fadeAnimation.value,
+              child: child,
+            ),
           );
         },
       ),
@@ -286,7 +307,9 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         (translate != TranslateType.None && newPos != null));
 
     final pos = _getPixelFromCluster(cluster);
-
+    
+     Animation<double> fadeAnimation = _fadeAnimation(_zoomController, fade);
+    
     Animation<Point> translateAnimation =
         _translateAnimation(_zoomController, translate, pos, newPos);
 
@@ -312,7 +335,10 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
           top: translate == TranslateType.None
               ? pos.y
               : translateAnimation.value.y,
-          child: child,
+          child: Opacity(
+            opacity: fade == FadeType.None ? 1 : fadeAnimation.value,
+            child: child,
+          ),
         );
       },
     );
