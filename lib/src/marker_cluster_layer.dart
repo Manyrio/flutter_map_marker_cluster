@@ -438,7 +438,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         // cluster
         layers.add(_buildCluster(layer));
         // children
-        //List<Marker> markersGettingClustered = List<Marker>();
+        List<Marker> markersGettingClustered = List<Marker>();
         //layer.children.forEach((child) {
         //  if (child is MarkerNode) {
         //    markersGettingClustered.add(child.marker);
