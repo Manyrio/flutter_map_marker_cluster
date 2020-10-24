@@ -436,7 +436,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       if (_zoomController.isAnimating &&
           (_currentZoom < _previousZoom && layer.children.length > 1)) {
         // cluster
-        layers.add(_buildCluster(layer));
+        //layers.add(_buildCluster(layer));
         // children
         List<Marker> markersGettingClustered = List<Marker>();
         layer.children.forEach((child) {
@@ -466,7 +466,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
             TranslateType.FromNewPosToMyPos,
             _getPixelFromCluster(layer, layer.parent.point)));
         //parent
-        layers.add(_buildCluster(layer.parent));
+        //layers.add(_buildCluster(layer.parent));
       } else {
         if (_isSpiderfyCluster(layer)) {
           layers.addAll(_buildSpiderfyCluster(layer, _currentZoom));
