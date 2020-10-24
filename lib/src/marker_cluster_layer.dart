@@ -169,16 +169,6 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       }
     }
   }
-  
-    Animation<double> _fadeAnimation(
-      AnimationController controller, FadeType fade) {
-    if (fade == FadeType.FadeIn)
-      return Tween<double>(begin: 0.0, end: 1.0).animate(controller);
-    if (fade == FadeType.FadeOut)
-      return Tween<double>(begin: 1.0, end: 0.0).animate(controller);
-
-    return null;
-  }
 
   Animation<Point> _translateAnimation(AnimationController controller,
       TranslateType translate, Point pos, Point newPos) {
@@ -197,16 +187,13 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
   }
 
   Widget _buildMarker(MarkerNode marker, AnimationController controller,
-      [FadeType fade = FadeType.None,
-      TranslateType translate = TranslateType.None,
+      [TranslateType translate = TranslateType.None,
       Point newPos,
       Point myPos]) {
     assert((translate == TranslateType.None && newPos == null) ||
         (translate != TranslateType.None && newPos != null));
 
     final pos = myPos ?? _getPixelFromMarker(marker);
-  
-    Animation<double> fadeAnimation = _fadeAnimation(controller, fade);
     
     Animation<Point> translateAnimation =
         _translateAnimation(controller, translate, pos, newPos);
@@ -229,7 +216,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
               ? pos.y
               : translateAnimation.value.y,
           child: Opacity(
-            opacity: fade == FadeType.None ? 1 : fadeAnimation.value,
+            opacity: 1,
             child: child,
           ),
         );
@@ -242,9 +229,6 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
 
     final points = _generatePointSpiderfy(
         cluster.markers.length, _getPixelFromPoint(cluster.point));
-    
-    final fadeAnimation =
-        Tween<double>(begin: 1.0, end: 0.3).animate(_spiderfyController);
     
     List<Widget> results = [];
 
@@ -268,7 +252,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
             left: pos.x,
             top: pos.y,
             child: Opacity(
-              opacity: fadeAnimation.value,
+              opacity: 1,
               child: child,
             ),
           );
@@ -282,7 +266,6 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       results.add(_buildMarker(
           marker,
           _spiderfyController,
-          FadeType.FadeIn,
           TranslateType.FromMyPosToNewPos,
           _removeAnchor(points[i], marker.width, marker.height, marker.anchor),
           _getPixelFromMarker(marker, cluster.point)));
@@ -300,15 +283,12 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
           : widget.options.computeSize(getClusterMarkers(cluster));
 
   Widget _buildCluster(MarkerClusterNode cluster,
-      [FadeType fade = FadeType.None,
-      TranslateType translate = TranslateType.None,
+      [TranslateType translate = TranslateType.None,
       Point newPos]) {
     assert((translate == TranslateType.None && newPos == null) ||
         (translate != TranslateType.None && newPos != null));
 
     final pos = _getPixelFromCluster(cluster);
-    
-     Animation<double> fadeAnimation = _fadeAnimation(_zoomController, fade);
     
     Animation<Point> translateAnimation =
         _translateAnimation(_zoomController, translate, pos, newPos);
@@ -336,7 +316,7 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
               ? pos.y
               : translateAnimation.value.y,
           child: Opacity(
-            opacity: fade == FadeType.None ? 1 : fadeAnimation.value,
+            opacity: 1,
             child: child,
           ),
         );
@@ -433,8 +413,6 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         return List<Widget>();
       }
 
-      // fade in if
-      // animating and
       // zoom in and parent has the previous zoom
       if (_zoomController.isAnimating &&
           (_currentZoom > _previousZoom &&
@@ -443,11 +421,10 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         layers.add(_buildMarker(
             layer,
             _zoomController,
-            FadeType.FadeIn,
             TranslateType.FromNewPosToMyPos,
             _getPixelFromMarker(layer, layer.parent.point)));
         //parent
-        layers.add(_buildCluster(layer.parent, FadeType.FadeOut));
+        layers.add(_buildCluster(layer.parent));
       } else {
         layers.add(_buildMarker(layer, _zoomController));
       }
@@ -457,13 +434,11 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         return List<Widget>();
       }
 
-      // fade in if
-      // animating and
       // zoom out and children is more than one or zoom in and father has same point
       if (_zoomController.isAnimating &&
           (_currentZoom < _previousZoom && layer.children.length > 1)) {
         // cluster
-        layers.add(_buildCluster(layer, FadeType.FadeIn));
+        layers.add(_buildCluster(layer));
         // children
         List<Marker> markersGettingClustered = List<Marker>();
         layer.children.forEach((child) {
@@ -473,13 +448,11 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
             layers.add(_buildMarker(
                 child,
                 _zoomController,
-                FadeType.FadeOut,
                 TranslateType.FromMyPosToNewPos,
                 _getPixelFromMarker(child, layer.point)));
           } else {
             layers.add(_buildCluster(
                 child,
-                FadeType.FadeOut,
                 TranslateType.FromMyPosToNewPos,
                 _getPixelFromCluster(child, layer.point)));
           }
@@ -497,11 +470,10 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
         // cluster
         layers.add(_buildCluster(
             layer,
-            FadeType.FadeIn,
             TranslateType.FromNewPosToMyPos,
             _getPixelFromCluster(layer, layer.parent.point)));
         //parent
-        layers.add(_buildCluster(layer.parent, FadeType.FadeOut));
+        layers.add(_buildCluster(layer.parent));
       } else {
         if (_isSpiderfyCluster(layer)) {
           layers.addAll(_buildSpiderfyCluster(layer, _currentZoom));
