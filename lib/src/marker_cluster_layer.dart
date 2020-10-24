@@ -174,13 +174,13 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       TranslateType translate, Point pos, Point newPos) {
     if (translate == TranslateType.FromNewPosToMyPos)
       return Tween<Point>(
-        begin: Point(newPos.x, newPos.y),
-        end: Point(pos.x, pos.y),
+        begin: Point(pos.x, pos.y), // Point(newPos.x, newPos.y),
+        end: Point(pos.x, pos.y), // Point(pos.x, pos.y),
       ).animate(controller);
     if (translate == TranslateType.FromMyPosToNewPos)
       return Tween<Point>(
-        begin: Point(pos.x, pos.y),
-        end: Point(newPos.x, newPos.y),
+        begin: Point(newPos.x, newPos.y), // Point(pos.x, pos.y),
+        end: Point(newPos.x, newPos.y), // Point(newPos.x, newPos.y),
       ).animate(controller);
 
     return null;
