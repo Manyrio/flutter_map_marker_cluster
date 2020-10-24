@@ -436,20 +436,20 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       if (_zoomController.isAnimating &&
           (_currentZoom < _previousZoom && layer.children.length > 1)) {
         // cluster
-        //layers.add(_buildCluster(layer));
+        layers.add(_buildCluster(layer));
         // children
-        List<Marker> markersGettingClustered = List<Marker>();
-        layer.children.forEach((child) {
-          if (child is MarkerNode) {
-            markersGettingClustered.add(child.marker);
+        //List<Marker> markersGettingClustered = List<Marker>();
+        //layer.children.forEach((child) {
+        //  if (child is MarkerNode) {
+        //    markersGettingClustered.add(child.marker);
 
-            layers.add(_buildMarker(
-                child,
-                _zoomController,
-                TranslateType.FromMyPosToNewPos,
-                _getPixelFromMarker(child, layer.point)));
-          }
-        });
+        //    layers.add(_buildMarker(
+        //        child,
+        //        _zoomController,
+        //        TranslateType.FromMyPosToNewPos,
+        //        _getPixelFromMarker(child, layer.point)));
+        //  }
+        //});
 
         if (widget.options.popupOptions != null) {
           widget.options.popupOptions.popupController
@@ -461,12 +461,12 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
       } else if (_zoomController.isAnimating &&
           (_currentZoom > _previousZoom && layer.parent.point != layer.point)) {
         // cluster
-        layers.add(_buildCluster(
-            layer,
-            TranslateType.FromNewPosToMyPos,
-            _getPixelFromCluster(layer, layer.parent.point)));
+        //layers.add(_buildCluster(
+        //    layer,
+        //    TranslateType.FromNewPosToMyPos,
+        //    _getPixelFromCluster(layer, layer.parent.point)));
         //parent
-        //layers.add(_buildCluster(layer.parent));
+        layers.add(_buildCluster(layer.parent));
       } else {
         if (_isSpiderfyCluster(layer)) {
           layers.addAll(_buildSpiderfyCluster(layer, _currentZoom));
