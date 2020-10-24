@@ -423,8 +423,6 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
             _zoomController,
             TranslateType.FromNewPosToMyPos,
             _getPixelFromMarker(layer, layer.parent.point)));
-        //parent
-        layers.add(_buildCluster(layer.parent));
       } else {
         layers.add(_buildMarker(layer, _zoomController));
       }
@@ -450,11 +448,6 @@ class _MarkerClusterLayerState extends State<MarkerClusterLayer>
                 _zoomController,
                 TranslateType.FromMyPosToNewPos,
                 _getPixelFromMarker(child, layer.point)));
-          } else {
-            layers.add(_buildCluster(
-                child,
-                TranslateType.FromMyPosToNewPos,
-                _getPixelFromCluster(child, layer.point)));
           }
         });
 
